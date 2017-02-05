@@ -11,10 +11,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/map"
-    map:cameraTargetLat="23.7"
-    map:cameraBearing="112.5"
-    map:cameraTilt="65"
-    map:cameraZoom="17"
-    map:cameraTargetLng="90.3"
     android:name="com.google.android.gms.maps.MapFragment"/>
 </RelativeLayout>
