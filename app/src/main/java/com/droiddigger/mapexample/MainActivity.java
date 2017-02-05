@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         int id=item.getItemId();
         if(id==R.id.v2){
             startActivity(new Intent(MainActivity.this, DetailedMap.class));
+        }else if(id==R.id.v3){
+            startActivity(new Intent(MainActivity.this, Polyline.class));
         }
         return true;
     }
