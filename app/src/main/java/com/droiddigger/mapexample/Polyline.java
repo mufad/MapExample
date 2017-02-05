@@ -1,5 +1,6 @@
 package com.droiddigger.mapexample;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -47,5 +49,7 @@ public class Polyline extends AppCompatActivity implements OnMapReadyCallback {
         googleMap.addMarker(bracu);
         googleMap.addMarker(uap);
         googleMap.addMarker(ewu);
+        googleMap.addCircle(new CircleOptions().center(bracul).radius(1000).
+                strokeColor(Color.GRAY).fillColor(Color.argb(64,0,25,0)));
     }
 }
