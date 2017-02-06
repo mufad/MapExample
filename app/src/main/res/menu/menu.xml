@@ -7,4 +7,7 @@
     <item android:id="@+id/v3"
         android:title="Polyline"
         app:showAsAction="never"/>
+    <item android:id="@+id/v4"
+        android:title="Run"
+        app:showAsAction="never"/>
 </menu>
