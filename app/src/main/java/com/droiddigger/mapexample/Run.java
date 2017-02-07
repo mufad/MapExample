@@ -79,7 +79,7 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         mLastLocation=LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        Log.d("LOCATION", mLastLocation.toString());
+        //Log.d("LOCATION", mLastLocation.toString());
 
     }
     @Override
@@ -144,7 +144,7 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
      public void addMarker(){
          if (mLastLocation!=null){
             CameraPosition cameraPosition=CameraPosition.builder().target(new LatLng(mLastLocation.getLatitude(),
-                            mLastLocation.getLongitude())).zoom(10).tilt(45).bearing(0).build();
+                            mLastLocation.getLongitude())).zoom(14).tilt(45).bearing(0).build();
             myMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             myMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),
                     mLastLocation.getLongitude())).title("Me"));
