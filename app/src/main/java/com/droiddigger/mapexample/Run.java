@@ -38,7 +38,7 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
     LocationRequest mLocationRequest;
     private ArrayList<LatLng> points;
     Polyline line;
-    private static final long INTERVAL = 1000 * 60 * 1;
+    private static final long INTERVAL = 1000;
     private static final long FASTEST_INTERVAL = 1000 * 60 * 1;
     private static final float SMALLEST_DISPLACEMENT = 0.25F;
     @Override
@@ -66,16 +66,15 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest=LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(1000);
         mLocationRequest.setInterval(INTERVAL);
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED /*&& ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED*/) {
 
             ActivityCompat.requestPermissions(Run.this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -121,13 +120,7 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
 
     @Override
     public void onLocationChanged(Location location) {
-        if (mLastLocation!=null){
-            CameraPosition cameraPosition=CameraPosition.builder().target(new LatLng(mLastLocation.getLatitude(),
-                            mLastLocation.getLongitude())).zoom(10).tilt(45).bearing(0).build();
-            myMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            myMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),
-                    mLastLocation.getLongitude())).title("Me"));
-        }
+    
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         points.add(latLng);
         redrawLine();
@@ -144,6 +137,17 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
             LatLng point = points.get(i);
             options.add(point);
         }
+        addMarker();
         line = myMap.addPolyline(options); //add Polyline
     }
+                
+     public void addMarker(){
+         if (mLastLocation!=null){
+            CameraPosition cameraPosition=CameraPosition.builder().target(new LatLng(mLastLocation.getLatitude(),
+                            mLastLocation.getLongitude())).zoom(10).tilt(45).bearing(0).build();
+            myMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            myMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),
+                    mLastLocation.getLongitude())).title("Me"));
+        }
+     }
 }
