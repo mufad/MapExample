@@ -9,7 +9,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -148,6 +147,8 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
             myMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             myMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),
                     mLastLocation.getLongitude())).title("Me"));
+             Toast.makeText(this, String.valueOf(mLastLocation.getLatitude())+" " +
+                     " "+String.valueOf(mLastLocation.getLongitude()), Toast.LENGTH_SHORT).show();
         }
      }
 }
