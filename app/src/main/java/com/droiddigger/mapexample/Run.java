@@ -122,6 +122,7 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
     
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         points.add(latLng);
+        //addMarker();
         redrawLine();
     }
 
@@ -132,11 +133,12 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
     private void redrawLine(){
 
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
+
         for (int i = 0; i < points.size(); i++) {
             LatLng point = points.get(i);
             options.add(point);
         }
-        addMarker();
+        //addMarker();
         line = myMap.addPolyline(options); //add Polyline
     }
                 
