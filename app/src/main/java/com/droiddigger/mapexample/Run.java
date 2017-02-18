@@ -117,6 +117,8 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 
+
+
     @Override
     public void onLocationChanged(Location location) {
     
