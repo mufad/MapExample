@@ -122,10 +122,11 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     public void onLocationChanged(Location location) {
     
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        points.add(latLng);
+        //LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        //points.add(latLng);
         //addMarker();
-        redrawLine();
+        //redrawLine();
+
     }
 
     @Override
