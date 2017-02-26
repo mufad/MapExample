@@ -126,6 +126,14 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
         //points.add(latLng);
         //addMarker();
         //redrawLine();
+        if(location!=null){
+            CameraPosition cameraPosition=CameraPosition.builder().target(new LatLng(location.getLatitude(),
+                    location.getLongitude())).zoom(14).tilt(45).bearing(0).build();
+            myMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            myMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),
+                    mLastLocation.getLongitude())).title("Me"));
+        }
+
 
     }
 
