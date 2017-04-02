@@ -29,17 +29,18 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 
 public class Run extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener{
-    boolean ready=false;
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+    boolean ready = false;
     GoogleMap myMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
     private ArrayList<LatLng> points;
-    Polyline line;
     private static final long INTERVAL = 1000;
-    private static final long FASTEST_INTERVAL = 1000 * 60 * 1;
     private static final float SMALLEST_DISPLACEMENT = 0.25F;
+    static final CameraPosition home = CameraPosition.builder().target(new LatLng(23.759936, 90.361341)).
+            zoom(10).bearing(0).tilt(45).build();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,38 +50,39 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-        points = new ArrayList<LatLng>();
+        points = new ArrayList<>();
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        ready=true;
-        myMap=googleMap;
+        ready = true;
+        myMap = googleMap;
+        myMap.moveCamera(CameraUpdateFactory.newCameraPosition(home));
 
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest=LocationRequest.create();
+        mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED /*&& ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED*/) {
+                != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(Run.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
         }
+        myMap.setMyLocationEnabled(true);
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        mLastLocation=LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        //Log.d("LOCATION", mLastLocation.toString());
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
 
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -98,7 +100,7 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
 
                 } else {
 
-                    Toast.makeText(Run.this, "Permission denied to acces location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Run.this, "Permission denied to access location", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
@@ -107,33 +109,23 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
 
     @Override
     protected void onStop() {
-        if(mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
         super.onStop();
     }
+
     @Override
     public void onConnectionSuspended(int i) {
 
     }
 
 
-
     @Override
     public void onLocationChanged(Location location) {
-    
-        //LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        //points.add(latLng);
-        //addMarker();
-        //redrawLine();
-        if(location!=null){
-            CameraPosition cameraPosition=CameraPosition.builder().target(new LatLng(location.getLatitude(),
-                    location.getLongitude())).zoom(14).tilt(45).bearing(0).build();
-            myMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            myMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),
-                    mLastLocation.getLongitude())).title("Me"));
-        }
-
+        points.add(new LatLng(location.getLatitude(), location.getLongitude()));
+        redrawLine();
+        addMarker();
 
     }
 
@@ -141,7 +133,8 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-    private void redrawLine(){
+
+    private void redrawLine() {
 
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
 
@@ -149,19 +142,18 @@ public class Run extends AppCompatActivity implements OnMapReadyCallback,
             LatLng point = points.get(i);
             options.add(point);
         }
-        //addMarker();
-        line = myMap.addPolyline(options); //add Polyline
+       myMap.addPolyline(options);
     }
-                
-     public void addMarker(){
-         if (mLastLocation!=null){
-            CameraPosition cameraPosition=CameraPosition.builder().target(new LatLng(mLastLocation.getLatitude(),
-                            mLastLocation.getLongitude())).zoom(14).tilt(45).bearing(0).build();
+
+    public void addMarker() {
+        if (mLastLocation != null) {
+            CameraPosition cameraPosition = CameraPosition.builder().target(new LatLng(mLastLocation.getLatitude(),
+                    mLastLocation.getLongitude())).zoom(14).tilt(45).bearing(0).build();
             myMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             myMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),
                     mLastLocation.getLongitude())).title("Me"));
-             Toast.makeText(this, String.valueOf(mLastLocation.getLatitude())+" " +
-                     " "+String.valueOf(mLastLocation.getLongitude()), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.valueOf(mLastLocation.getLatitude()) + " " +
+                    " " + String.valueOf(mLastLocation.getLongitude()), Toast.LENGTH_SHORT).show();
         }
-     }
+    }
 }
